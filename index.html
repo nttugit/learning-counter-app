@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon"
+        href="https://images.vexels.com/media/users/3/128895/isolated/preview/f9298b663ad1e671680cad2ed70b20c3-timer-reload-flat-icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <title>Learning Counter</title>
+
+
+    <style>
+        body {
+            background-color: antiquewhite;
+        }
+
+        .app-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* background-color: lightgrey; */
+        }
+
+        .timer-wrapper {
+            width: 50%;
+            height: 50%;
+            background-color: lightgrey;
+            border-radius: 20px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .timer-content {
+            text-align: center;
+        }
+
+        .timer-time h1 {
+            font-size: 70px;
+        }
+
+        .timer-buttons button {
+            padding: 10px 20px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <button class="btn btn-danger" id="btn-reset">Reset</button>
+    <ul>Notes: Các chức năng có thể thêm
+        <ol>- Tổng theo tuần, theo tháng</ol>
+        <ol>- Todos</ol>
+        <ol>- Multiple users</ol>
+        <ol>- DB (json)</ol>
+        <ol>- SweetAlert(confirm)</ol>
+    </ul>
+    <div class="container app-container">
+
+        <div class="timer-wrapper">
+            <div class="timer-content">
+                <div class="timer-time">
+                    <h1 id="time">
+                        00:00:00
+                    </h1>
+                </div>
+                <div class="timer-buttons">
+                    <button class="btn btn-primary" id="btn-start">Start</button>
+                    <button class="btn btn-danger disabled" id="btn-reset-fake">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        const NTTU_TIMER_ID = "nttu-timer";
+        const startBtn = document.getElementById("btn-start");
+        const resetBtn = document.getElementById("btn-reset");
+        const time = document.getElementById("time");
+
+        let count = getFromLocalStorage();
+        let hour = 0, minute = 0, second = 0;
+        if (count != 0) {
+            calculateTime(count);
+            time.innerText = convertIntegersToTimeFormat(hour, minute, second);
+        }
+
+
+        var countIntervalId = null;
+        startBtn.addEventListener("click", (e) => {
+            console.log(e.target.innerText);
+            if (e.target.innerText == "Start") {
+                start();
+            } else {
+                pause();
+            }
+        })
+
+        resetBtn.addEventListener("click", (e) => {
+            reset();
+        })
+
+        function start() {
+            startBtn.innerText = "Pause";
+
+            countIntervalId = setInterval(function () {
+                count++;
+                calculateTime(count);
+                saveIntoLocalStorage(count);
+                time.innerText = convertIntegersToTimeFormat(hour, minute, second);
+            }, 1000);
+        }
+
+        function pause() {
+            startBtn.innerText = "Start";
+            clearInterval(countIntervalId);
+        }
+
+        function reset() {
+            count = 0;
+            saveIntoLocalStorage(count);
+            time.innerText = "00:00:00";
+        }
+
+
+
+        function calculateTime(count) {
+            hour = parseInt(count / 3600);
+            count = count % 3600;
+            minute = parseInt(count / 60);
+            count = count % 60;
+            second = parseInt(count);
+        }
+
+        function saveIntoLocalStorage(count) {
+            localStorage.setItem(NTTU_TIMER_ID, count + "");
+        }
+
+        function getFromLocalStorage() {
+            return parseInt(localStorage.getItem(NTTU_TIMER_ID)) || 0;
+        }
+
+        function convertIntegersToTimeFormat(hour, minute, second) {
+            if (hour < 10) hour = "0" + hour;
+            if (minute < 10) minute = "0" + minute;
+            if (second < 10) second = "0" + second;
+            return hour + ":" + minute + ":" + second;
+        }
+
+    </script>
+</body>
+
+
+
+</html>

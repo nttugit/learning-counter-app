@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <title>Count-Up Timer</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 36px;
+            margin: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="timer">
+        <span id="counter">0</span> seconds
+    </div>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+
+    <!-- <script src="script.js"></script> -->
+    <script>
+        let timerInterval;
+        let counter = 0;
+
+        const counterElement = document.getElementById("counter");
+        const startButton = document.getElementById("startButton");
+        const stopButton = document.getElementById("stopButton");
+
+        startButton.addEventListener("click", startTimer);
+        stopButton.addEventListener("click", stopTimer);
+
+        function startTimer() {
+            // Disable the start button while the timer is running
+            startButton.disabled = true;
+
+            timerInterval = setInterval(function () {
+                counter++;
+                counterElement.textContent = counter + " seconds";
+            }, 1000);
+        }
+
+        function stopTimer() {
+            // Enable the start button when the timer is stopped
+            startButton.disabled = false;
+
+            clearInterval(timerInterval);
+        }
+
+    </script>
+</body>
+
+</html>
